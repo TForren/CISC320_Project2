@@ -1,25 +1,29 @@
 import networkx as nx
 import sys
+import part1
 
-socialGraph = nx.MultiGraph()
-
+#socialGraph = nx.Graph()
+#parser output contains Graph, partyCount, hostCount
+#parserOutput = []
 f = open(sys.argv[1])
 socialGraphFile = f.readlines()
 f.close()
 
+parserOutput = []
 def parseFileLines(fileLines):
+	socialGraph = nx.Graph()
 	splitLine = []
 	testCaseCount = 0
-	curTestCase = 1
+	curTestCase = 0
 	peopleCount = 0 #N
 	linkCount = 0 #F
 	partyCount = 0 #M
 	partyHostCount = 0 #A
-	partyHostIDs = [] 
+	partyHostIDs = []
 	LP = 1 #Line Pointer skip first line
 
 	testCaseCount = int(fileLines[0])
-	print "loading", testCaseCount, "test cases..."
+	print "Processing", testCaseCount, "test cases..."
 	while LP < len(fileLines):
 		curLine = fileLines[LP]
 		splitLine = curLine.split()
@@ -29,28 +33,48 @@ def parseFileLines(fileLines):
 			linkCount = int(splitLine[1])
 			partyCount = int(splitLine[2])
 			partyHostCount = int(splitLine[3])
+			partyHostIDs = []
 			LP += 1
-			print "Test case:",curTestCase
+			print "Test case:",curTestCase + 1
 			print " People:", peopleCount
 			print " Friendships:", linkCount
 			print " Parties:", partyCount
 			print " Hosts:", partyHostCount
-			curTestCase += 1
 
 		for lineNum in range(LP, linkCount+LP):
 			curLine = fileLines[LP]
 			splitLine = curLine.split()
-			socialGraph.add_edge(splitLine[0],splitLine[1])
-			print LP+1,"adding edge", splitLine[0],"and",splitLine[1]
-			LP += 1
-		
+			socialGraph.add_edge(int(splitLine[0]),int(splitLine[1]))
+			#print LP+1,"adding edge", splitLine[0],"and",splitLine[1]
+			LP += 1	
 		if partyHostCount != 0:
-			localPartyHosts = []
 			for lineNum in range(LP,partyHostCount+LP):
-				localPartyHosts.append(int(fileLines[lineNum]))
+				partyHostIDs.append(int(fileLines[lineNum]))
 				LP += 1
-			partyHostIDs.append(localPartyHosts)
-			print "partyHostIDs:",partyHostIDs
-
+			#print "partyHostIDs:",partyHostIDs
+		
+		curTestArray = [socialGraph,partyCount,partyHostIDs]
+		parserOutput.append(curTestArray)
+		curTestCase += 1
 
 parseFileLines(socialGraphFile)	
+#print "parser output:",parserOutput
+
+#iterate over all the test cases now that they are processed into networkx graphs
+for counter, test in enumerate(parserOutput):
+	#test = [graph, partyCount, hosts]
+	#					0					1					2
+	curGraph = test[0]
+	partyCount = test[1]
+	hosts = test[2]
+	print "Test Case",counter+1
+	#part 1
+	if len(hosts) == 1:
+		host = hosts[0]
+		avg = 0
+		awkwardValues = part1.calcAwkwardValues(curGraph,host)
+		for person in awkwardValues:
+			if (awkwardValues[person] != 0):
+				avg = avg + awkwardValues[person]
+		avg = float(avg) / float(len(nx.nodes(curGraph))-1)
+		print "Average social awkwardness =", avg
