@@ -67,7 +67,10 @@ for counter, test in enumerate(parserOutput):
 	curGraph = test[0]
 	partyCount = test[1]
 	hosts = test[2]
+	people = nx.nodes(curGraph)
+	peopleCount = len(people)
 	print "Test Case",counter+1
+	
 	#part 1
 	if len(hosts) == 1:
 		host = hosts[0]
@@ -76,5 +79,26 @@ for counter, test in enumerate(parserOutput):
 		for person in awkwardValues:
 			if (awkwardValues[person] != 0):
 				avg = avg + awkwardValues[person]
-		avg = float(avg) / float(len(nx.nodes(curGraph))-1)
+		avg = float(avg) / float(peopleCount - 1)
 		print "Average social awkwardness =", avg
+	
+	#part 2 
+	elif len(hosts) > 1:
+		bestAwkVals = {}
+		hostEval = {}
+		avg = 0
+		for host in hosts:
+			curHostEval = part1.calcAwkwardValues(curGraph,host)
+			hostEval[host] = curHostEval	
+		for person in people:
+			best = float('inf')
+			for host in hostEval:
+				curHostEval = hostEval[host]
+				if curHostEval[person] < best:
+					best = curHostEval[person]
+			bestAwkVals[person] = best 
+		for person in bestAwkVals:
+			if (bestAwkVals[person] != 0):
+				avg = avg + bestAwkVals[person]
+		avg = float(avg) / float(peopleCount - len(hosts))
+		print "Average social awkwardness = ", avg

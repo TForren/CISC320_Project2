@@ -23,3 +23,7 @@ def avgAwkwardness(socialGraph, peopleCount, hostID):
 	avg = 0
 	#for person in people:
 		#avg = avg +  
+
+#takes in a list of people and the host IDs
+#returns a floating point avg awkwardness across all 
+#def calcAvgAwk(people, hostIDs):
