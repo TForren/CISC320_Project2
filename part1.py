@@ -15,15 +15,28 @@ def calcAwkwardValues(socialGraph, hostID):
 		awkwardValues[person] = awk
 	return awkwardValues 
 
-#avgAwkwardness
-#takes in socialGraphnx, peopleCount, and party host ID
-#returns the average social awkwardness if everyone attended the party (int)
-def avgAwkwardness(socialGraph, peopleCount, hostID): 
-	people = nodes(socialGraph)
+#bestAwkVals
+#calculates the awkwardness of each person if they attend the party hosted by the host they know best. 
+#takes in a graph and list of host ids
+#returns the avg social awkwardness (int)
+def bestAwkVals(graph, hosts):
+	bestAwkVals = {}
+	hostEval = {}
 	avg = 0
-	#for person in people:
-		#avg = avg +  
+	for host in hosts:
+		curHostEval = calcAwkwardValues(graph, host)
+		hostEval[host] = curHostEval
+	for person in people:
+		curBest = float('inf')
+		for host in hostEval:
+			curHostEval = hostEval[host]
+			if curHostEval[person] < best:
+				curBest = curHostEval[person]
+		bestAwkVals[person] = curBest
+	for person in bestAwkVals:
+		if (bestAwkVals[person] != 0):
+			avg = avg + bestAwkVals[person]
+	avg = float(avg) / float(personCount - len(hosts))
+	return avg
 
-#takes in a list of people and the host IDs
-#returns a floating point avg awkwardness across all 
-#def calcAvgAwk(people, hostIDs):
+

@@ -1,6 +1,6 @@
 import networkx as nx
 import sys
-import part1
+import partyCalcs as pc
 
 #socialGraph = nx.Graph()
 #parser output contains Graph, partyCount, hostCount
@@ -8,6 +8,7 @@ import part1
 f = open(sys.argv[1])
 socialGraphFile = f.readlines()
 f.close()
+DEBUG = False
 
 parserOutput = []
 def parseFileLines(fileLines):
@@ -23,7 +24,8 @@ def parseFileLines(fileLines):
 	LP = 1 #Line Pointer skip first line
 
 	testCaseCount = int(fileLines[0])
-	print "Processing", testCaseCount, "test cases..."
+	if DEBUG:
+		print "Processing", testCaseCount, "test cases..."
 	while LP < len(fileLines):
 		curLine = fileLines[LP]
 		splitLine = curLine.split()
@@ -35,11 +37,12 @@ def parseFileLines(fileLines):
 			partyHostCount = int(splitLine[3])
 			partyHostIDs = []
 			LP += 1
-			print "Test case:",curTestCase + 1
-			print " People:", peopleCount
-			print " Friendships:", linkCount
-			print " Parties:", partyCount
-			print " Hosts:", partyHostCount
+			if DEBUG:
+				print "Test case:",curTestCase + 1
+				print " People:", peopleCount
+				print " Friendships:", linkCount
+				print " Parties:", partyCount
+				print " Hosts:", partyHostCount
 
 		for lineNum in range(LP, linkCount+LP):
 			curLine = fileLines[LP]
@@ -73,32 +76,42 @@ for counter, test in enumerate(parserOutput):
 	
 	#part 1
 	if len(hosts) == 1:
-		host = hosts[0]
-		avg = 0
-		awkwardValues = part1.calcAwkwardValues(curGraph,host)
-		for person in awkwardValues:
-			if (awkwardValues[person] != 0):
-				avg = avg + awkwardValues[person]
-		avg = float(avg) / float(peopleCount - 1)
+		awkwardValues = pc.calcAwkwardValues(curGraph,hosts[0])
+		avg = pc.calcAvgAwk(awkwardValues,hosts)
 		print "Average social awkwardness =", avg
 	
 	#part 2 
 	elif len(hosts) > 1:
-		bestAwkVals = {}
-		hostEval = {}
-		avg = 0
-		for host in hosts:
-			curHostEval = part1.calcAwkwardValues(curGraph,host)
-			hostEval[host] = curHostEval	
-		for person in people:
-			best = float('inf')
-			for host in hostEval:
-				curHostEval = hostEval[host]
-				if curHostEval[person] < best:
-					best = curHostEval[person]
-			bestAwkVals[person] = best 
-		for person in bestAwkVals:
-			if (bestAwkVals[person] != 0):
-				avg = avg + bestAwkVals[person]
-		avg = float(avg) / float(peopleCount - len(hosts))
-		print "Average social awkwardness = ", avg
+		awkVals = pc.bestAwkVals(curGraph,people,hosts)
+		avg = pc.calcAvgAwk(awkVals,hosts)
+		print "Average social awkwardness =", avg
+		
+	#part 3
+	elif len(hosts) == 0:
+		#Greedy Heuristic 1
+		chosenHosts = pc.mostPopular(curGraph,people,partyCount)
+		print "Heuristic 1 hosts are",chosenHosts
+		avkVals = pc.bestAwkVals(curGraph, people, chosenHosts)
+		avg = pc.calcAvgAwk(awkVals,chosenHosts)
+		print "Average social awkwardness =", avg 
+		
+		#Greedy Heuristic 2
+		chosenHosts = []
+		availablePeople = list(people)
+		mostPopular = pc.mostPopular(curGraph, people, 1)[0]
+		chosenHosts.append(mostPopular)
+		availablePeople.remove(mostPopular)
+		for i in range(1,partyCount):
+			awkVals = pc.bestAwkVals(curGraph, people, chosenHosts)
+			curPartyHost = pc.mostAwkward(awkVals, availablePeople)
+			chosenHosts.append(curPartyHost)
+			availablePeople.remove(curPartyHost)
+			
+		print "Heuristic 2 hosts are",chosenHosts
+		awkVals = pc.bestAwkVals(curGraph,people,chosenHosts)
+		avg = pc.calcAvgAwk(awkVals,chosenHosts)
+		print "Average social awkwardness =", avg
+
+	#part 4
+
+	
