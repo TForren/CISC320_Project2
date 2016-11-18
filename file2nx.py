@@ -1,7 +1,7 @@
 import networkx as nx
 import sys
 import partyCalcs as pc
-
+from networkx.algorithms.approximation import min_weighted_vertex_cover
 #socialGraph = nx.Graph()
 #parser output contains Graph, partyCount, hostCount
 #parserOutput = []
@@ -113,5 +113,6 @@ for counter, test in enumerate(parserOutput):
 		print "Average social awkwardness =", avg
 
 	#part 4
-
-	
+		#cover = pc.minCover(curGraph)
+		cover = min_weighted_vertex_cover(curGraph)
+		print cover

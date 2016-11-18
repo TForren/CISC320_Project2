@@ -1,5 +1,6 @@
 import networkx as nx
 import operator
+import random
 
 #given n people and 1 party host, calculate average social awkardness if all people attended 
 
@@ -76,3 +77,22 @@ def mostAwkward(awkVals, availablePeople):
 	return curBest[0]
 
 
+#checkIncidents
+#checks if edge1 and edge2 have any nodes in common
+#returns boolean
+def checkIncidents(edge1,edge2):
+	result = True
+	if edge1[0] == edge2[0] or edge1[0] == edge2[1]:
+		result = True
+	elif edge1[1] == edge2[0] or edge1[1] == edge2[1]:
+		result = True
+	return result
+
+#minCover
+#takes a graph 
+#returns a list of verticies 
+def minCover(graph): 
+	result = []
+	for u,v in graph.edges_iter():
+		print u	
+	return result
