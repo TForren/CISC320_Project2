@@ -8,7 +8,7 @@ import random
 f = open(sys.argv[1])
 socialGraphFile = f.readlines()
 f.close()
-DEBUG = False
+DEBUG = True
 
 parserOutput = []
 def parseFileLines(fileLines):
@@ -114,10 +114,5 @@ for counter, test in enumerate(parserOutput):
 
 	#part 4
 	#hosts == 0
-		source = random.choice(people)
-		#source = 1
-		bfsTree = nx.bfs_tree(curGraph, source)
-		childDict = nx.bfs_successors(curGraph, source)
-		#print source,dfsTree.edges()
-		reds = pc.colorTree(bfsTree, source, childDict)
-		print reds
+		dfsTree = nx.dfs_tree(curGraph, random.choice(people))
+		print dfsTree

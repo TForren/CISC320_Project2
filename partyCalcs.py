@@ -76,7 +76,6 @@ def mostAwkward(awkVals, availablePeople):
 					curBest = (person,curAwk)
 	return curBest[0]
 
-
 #checkIncidents
 #checks if edge1 and edge2 have any nodes in common
 #returns boolean
@@ -96,3 +95,34 @@ def minCover(graph):
 	for u,v in graph.edges_iter():
 		print u	
 	return result
+
+#getChildren
+def getChildren(node,edges):
+	children = []
+	for edge in edges:
+		if edge[0] == node:
+			children.append(edge[1])
+	return children
+
+#colorNode
+#recursively colors 
+#takes in a nodeId and a boolean isRed.
+#returns list of red nodes
+def colorNode(node, isRed, childDict, reds, nodes):
+	if node in nodes:
+		if isRed:
+			reds.append(node)
+		nodes.remove(node)
+		if node in childDict.keys():
+			for child in childDict[node]:
+				colorNode(child, not isRed, childDict, reds, nodes)
+#colorTree
+def colorTree(tree, source, childDict):
+	isRed = True
+	nodes = tree.nodes()
+	reds = []
+	print "coloring:"
+	print "nodes", nodes
+	print "childDict", childDict
+	colorNode(source,isRed,childDict,reds,nodes)
+	return reds
