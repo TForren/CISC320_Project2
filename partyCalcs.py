@@ -121,8 +121,8 @@ def colorTree(tree, source, childDict):
 	isRed = True
 	nodes = tree.nodes()
 	reds = []
-	print "coloring:"
-	print "nodes", nodes
-	print "childDict", childDict
+	#print "coloring:"
+	#print "nodes", nodes
+	#print "childDict", childDict
 	colorNode(source,isRed,childDict,reds,nodes)
 	return reds

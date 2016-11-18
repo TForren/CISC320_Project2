@@ -1,7 +1,6 @@
 import networkx as nx
-import sys
+import sys, random
 import partyCalcs as pc
-import random
 #socialGraph = nx.Graph()
 #parser output contains Graph, partyCount, hostCount
 #parserOutput = []
@@ -114,10 +113,15 @@ for counter, test in enumerate(parserOutput):
 
 	#part 4
 	#hosts == 0
+		chosenHosts = []
 		source = random.choice(people)
-		#source = 1
 		bfsTree = nx.bfs_tree(curGraph, source)
 		childDict = nx.bfs_successors(curGraph, source)
-		#print source,dfsTree.edges()
-		reds = pc.colorTree(bfsTree, source, childDict)
-		print reds
+		vertexCover = pc.colorTree(bfsTree, source, childDict)
+		step = int((len(vertexCover) / partyCount))
+		for i in range(0,partyCount):
+			chosenHosts.append(vertexCover[i+step])
+		awkVals = pc.bestAwkVals(curGraph,people,chosenHosts)
+		avg = pc.calcAvgAwk(awkVals,chosenHosts)
+		print "T4 Heuristic hosts are", chosenHosts
+		print "Average social awkwardness =", avg
