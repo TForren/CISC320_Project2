@@ -72,7 +72,8 @@ for counter, test in enumerate(parserOutput):
 	hosts = test[2]
 	people = nx.nodes(curGraph)
 	peopleCount = len(people)
-	print "Test Case",counter+1
+	print "\nTest Case",counter+1
+	print "-------------------------------"
 	#part 1
 	if len(hosts) == 1:
 		awkwardValues = pc.calcAwkwardValues(curGraph,hosts[0])
@@ -113,15 +114,10 @@ for counter, test in enumerate(parserOutput):
 
 	#part 4
 	#hosts == 0
-		chosenHosts = []
-		source = random.choice(people)
-		bfsTree = nx.bfs_tree(curGraph, source)
-		childDict = nx.bfs_successors(curGraph, source)
-		vertexCover = pc.colorTree(bfsTree, source, childDict)
-		step = int((len(vertexCover) / partyCount))
-		for i in range(0,partyCount):
-			chosenHosts.append(vertexCover[i+step])
+		chosenHosts = pc.mostPopularT4(curGraph,people,partyCount)
 		awkVals = pc.bestAwkVals(curGraph,people,chosenHosts)
 		avg = pc.calcAvgAwk(awkVals,chosenHosts)
-		print "T4 Heuristic hosts are", chosenHosts
+		print "My Heuristic hosts are", chosenHosts
 		print "Average social awkwardness =", avg
+
+		

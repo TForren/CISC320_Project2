@@ -92,8 +92,8 @@ def mostPopularT4(graph, people, partyCount):
 			j += 1
 			chosenPerson = mostPop[j]
 		chosenPeople.append(chosenPerson)
+	print "T4 Chosen people:", chosenPeople
 	return chosenPeople
-
 #mostAwkward
 #takes in awkward values and a list of available people
 #returns the most awkward sap out of them all
@@ -107,4 +107,36 @@ def mostAwkward(awkVals, availablePeople):
 				if person < curBest[0]:
 					curBest = (person,curAwk)
 	return curBest[0]
+
+#checkIncidents
+#checks if edge1 and edge2 have any nodes in common
+#returns boolean
+def checkIncidents(edge1,edge2):
+	result = True
+	if edge1[0] == edge2[0] or edge1[0] == edge2[1]:
+		result = True
+	elif edge1[1] == edge2[0] or edge1[1] == edge2[1]:
+		result = True
+	return result
+
+#colorNode
+#recursively colors 
+#takes in a nodeId and a boolean isRed.
+#returns list of red nodes
+def colorNode(node, isRed, childDict, reds, nodes):
+	if node in nodes:
+		if isRed:
+			reds.append(node)
+		nodes.remove(node)
+		if node in childDict.keys():
+			for child in childDict[node]:
+				colorNode(child, not isRed, childDict, reds, nodes)
+
+#colorTree
+def colorTree(tree, source, childDict):
+	isRed = True
+	nodes = tree.nodes()
+	reds = []
+	colorNode(source,isRed,childDict,reds,nodes)
+	return reds
 
